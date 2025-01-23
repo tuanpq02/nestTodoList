@@ -9,18 +9,7 @@ async function bootstrap() {
     .setTitle('Todo list ')
     .setDescription('The todo list API description')
     .setVersion('1.0')
-    .addBearerAuth(
-      // Enable Bearer Auth here
-      {
-      type: "http",
-      scheme: "bearer",
-      bearerFormat: "JWT",
-      name: "JWT",
-      description: "Enter JWT token",
-      in: "header",
-      },
-      "JWT-auth" // We will use this Bearer Auth with the JWT-auth name on the controller function      
-    )
+    .addBearerAuth()     
     .addTag('lists')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
