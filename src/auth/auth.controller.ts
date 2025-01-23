@@ -6,6 +6,7 @@ import { Public } from './decorator/public.decorator';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Controller()
 @ApiTags("auth")
@@ -19,7 +20,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Public()
   @Post('auth/login')
-  async login(@Request() req) {    
+  async login(@Request() req: any, @Body() body: UpdateUserDto) {    
     return this.authService.login(req.user);    
   }
 
