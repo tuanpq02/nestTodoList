@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { DEFAULT_PAGE_SIZE } from 'src/utils/constant';
+import { Role } from 'src/auth/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -57,7 +58,7 @@ export class UsersService {
     const user = await this.userRepo.findOneBy({id});
     console.log(user);
     console.log(currentUser);
-    if (user.id !== currentUser.id && currentUser.userRole !== "admin") {
+    if (user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
                 throw new UnauthorizedException();
             }
     return await this.userRepo.delete({ id });

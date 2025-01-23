@@ -6,6 +6,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { DEFAULT_PAGE_SIZE } from 'src/utils/constant';
 import { User } from 'src/entities/user.entity';
+import { Role } from 'src/auth/enums/role.enum';
 
 @Injectable()
 export class TasksService {
@@ -26,10 +27,10 @@ export class TasksService {
         const task = await this.taskRepo.findOne({ where: { id }, relations: ['user'] });        
         if (!task) {
             throw new NotFoundException();
-        }
-        // console.log(task.user);
-        // console.log(currentUser);
-        if (task.user.id !== currentUser.id && currentUser.userRole !== "admin") {
+        }        
+        console.log(task.user);
+        console.log(currentUser);
+        if (task.user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
             throw new UnauthorizedException();
         }
         const { user, ...result } = task;
@@ -51,7 +52,7 @@ export class TasksService {
             throw new NotFoundException();
         }
 
-        if (task.user.id !== currentUser.id && currentUser.userRole !== "admin") {
+        if (task.user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
             throw new UnauthorizedException();
         }      
         return await this.taskRepo.update({ id }, dto);
@@ -63,7 +64,7 @@ export class TasksService {
             throw new NotFoundException();
         }
 
-        if (task.user.id !== currentUser.id && currentUser.userRole !== "admin") {
+        if (task.user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
             throw new UnauthorizedException();
         }
         return await this.taskRepo.delete({ id });

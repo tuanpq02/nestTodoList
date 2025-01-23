@@ -5,7 +5,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from './decorator/public.decorator';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller()
 @ApiTags("auth")
@@ -35,12 +35,13 @@ export class AuthController {
   }
 
   @Get('profile')
-  getProfile(@Request() req) {
-    console.log("[auth.service getProfile]", req.user);
+  @ApiBearerAuth()
+  getProfile(@Request() req) {    
     return req.user;
   }
   
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)  
+  @ApiBearerAuth()
   @Post('auth/logout')
   async logout(@Request() req) {
     return req.logout();
