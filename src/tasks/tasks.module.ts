@@ -14,6 +14,7 @@ import { User } from 'src/entities/user.entity';
     UserModule
   ],
   controllers: [TasksController],
-  providers: [TasksService]
+  providers: [TasksService],
+  exports: [TasksService]
 })
 export class TasksModule {}

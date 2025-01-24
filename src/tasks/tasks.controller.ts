@@ -14,6 +14,7 @@ export class TasksController {
     @Post()
     // @UsePipes(new ValidationPipe({whitelist: true, forbidNonWhitelisted: true}))
     create(@Body() dto: CreateTaskDto, @CurrentUser() user: User) {
+        // console.log("[task.controller] create:", user);
         return this.tasksService.create(dto, user.id);
     }
 

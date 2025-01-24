@@ -16,7 +16,8 @@ export class TasksService {
         @InjectRepository(User) private userRepo: Repository<User>
     ) {}
 
-    async create(dto: CreateTaskDto, id: number) {       
+    async create(dto: CreateTaskDto, id: number) {      
+        // console.log(id); 
         const task =  this.taskRepo.create(dto);
         const user = await this.userRepo.findOneBy({id})        
         task.user = user;
@@ -28,8 +29,8 @@ export class TasksService {
         if (!task) {
             throw new NotFoundException();
         }        
-        console.log(task.user);
-        console.log(currentUser);
+        // console.log(task.user);
+        // console.log(currentUser);
         if (task.user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
             throw new UnauthorizedException();
         }
@@ -47,7 +48,9 @@ export class TasksService {
     }
 
     async update(id: number, dto: UpdateTaskDto, currentUser: any) {  
-        const task = await this.taskRepo.findOne({ where: { id }, relations: ['user'] });        
+        const task = await this.taskRepo.findOne({ where: { id }, relations: ['user'] });  
+        // console.log(task);   
+        // console.log({ ...task, ...dto});
         if (!task) {
             throw new NotFoundException();
         }
@@ -55,7 +58,9 @@ export class TasksService {
         if (task.user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
             throw new UnauthorizedException();
         }      
-        return await this.taskRepo.update({ id }, dto);
+
+        await this.taskRepo.update( id , dto);
+        return { id, ...dto };
     }
 
     async remove(id: number, currentUser: any) {
@@ -63,10 +68,11 @@ export class TasksService {
         if (!task) {
             throw new NotFoundException();
         }
-
+        
         if (task.user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
             throw new UnauthorizedException();
         }
-        return await this.taskRepo.delete({ id });
+        await this.taskRepo.delete({ id });
+        return task;
     }
 }

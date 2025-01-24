@@ -51,16 +51,24 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return await this.userRepo.update({ id }, updateUserDto);
+    await this.userRepo.update({ id }, updateUserDto);
+    return { id, ...updateUserDto };
   }
 
   async remove(id: number, currentUser: any) {
     const user = await this.userRepo.findOneBy({id});
-    console.log(user);
-    console.log(currentUser);
-    if (user.id !== currentUser.id && currentUser.role !== Role.ADMIN) {
-                throw new UnauthorizedException();
-            }
-    return await this.userRepo.delete({ id });
+
+    // console.log(user);
+    // console.log(currentUser);
+    
+    if (currentUser.role !== Role.ADMIN) {
+        throw new UnauthorizedException('role ADMIN is required!');
+    }
+    if (user.id !== currentUser.id && user.role === Role.ADMIN) {
+        throw new UnauthorizedException('ADMIN can not delete other ADMIN');
+    }
+
+    await this.userRepo.delete({ id });
+    return user;
   }
 }

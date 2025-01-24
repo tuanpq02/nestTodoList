@@ -12,6 +12,6 @@ export class Task {
     @Column({ default: true })
     completed: boolean;
 
-    @ManyToOne(() => User, (user) => user.tasks)
+    @ManyToOne(() => User, (user) => user.tasks, { cascade: true, onDelete: "CASCADE" })  
     user: User
 }

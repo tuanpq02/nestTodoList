@@ -7,6 +7,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { LoginUserDto } from 'src/users/dto/login-user.dto';
 
 @Controller()
 @ApiTags("auth")
@@ -16,20 +17,19 @@ export class AuthController {
     private readonly usersService: UsersService
   ) {}
 
-  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Log in by email and password ' })
   @UseGuards(LocalAuthGuard)
   @Public()
   @Post('auth/login')
-  async login(@Request() req: any, @Body() body: UpdateUserDto) {    
+  async login(@Request() req: any, @Body() body: LoginUserDto) {    
     return this.authService.login(req.user);    
   }
 
-  @Public()
   @ApiOperation({ summary: 'Register new user' })
   @ApiResponse({
-    status: 201,
-    description: 'It will return the user in the response',
+    status: 201,    
   })
+  @Public()
   @Post('auth/signup')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
